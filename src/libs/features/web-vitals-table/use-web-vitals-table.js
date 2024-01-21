@@ -1,10 +1,7 @@
 import { useState } from "react";
 
 import { cruxAPI } from "../../infra/api";
-import {
-  useSnackBarDispatch,
-  useSnackBarStore,
-} from "../../contexts/snack-bar-context";
+import { useSnackBarDispatch } from "../../contexts/snack-bar-context";
 import { LOAD_SNACK_BAR } from "../../contexts/snack-bar-context/action-types";
 
 const deviceOptions = [
