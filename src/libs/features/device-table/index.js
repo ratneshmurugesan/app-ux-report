@@ -2,7 +2,7 @@ import React from "react";
 import Box from "@mui/material/Box";
 import { DataGrid } from "@mui/x-data-grid";
 
-export default function DeviceTable({ searchData }) {
+export default function DeviceTable({ searchQuery, searchData }) {
   const isFractionsDataAvailable =
     !!searchData?.metrics?.form_factors?.fractions;
 
@@ -33,7 +33,8 @@ export default function DeviceTable({ searchData }) {
         };
       });
   }
-  console.log({ fractionsRows, fractionsCols });
+
+  if (!searchQuery) return <>Add a URL and search to see data</>;
 
   return (
     <Box sx={{ height: 400, width: "100%" }}>

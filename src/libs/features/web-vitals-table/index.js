@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React from "react";
 
 import {
   Stack,
@@ -8,54 +8,14 @@ import {
   MenuItem,
 } from "@mui/material";
 import Box from "@mui/material/Box";
-import { cruxAPI } from "../../infra/api";
-// import { DataGrid } from "@mui/x-data-grid";
+import { useWebVitalsTable } from "./use-web-vitals-table";
+import VitalBox from "../vital-box";
 
 export default function WebVitalsTable({ searchQuery }) {
-  const inputRef = useRef(null);
-  const [searchData, setSearchData] = useState(null);
-  const [selectedDevice, setSelectedDevice] = useState("ALL");
+  const { searchData, selectedDevice, deviceOptions, handleChange } =
+    useWebVitalsTable(searchQuery);
 
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      inputRef.current?.focus();
-    }, 100);
-    return () => {
-      clearTimeout(timeout);
-    };
-  }, []);
-
-  const fetchData = async (body) => {
-    try {
-      const data = await cruxAPI.create(body);
-      setSearchData(data.data.record);
-    } catch (err) {
-      alert(err.message);
-    }
-  };
-
-  const handleChange = (event) => {
-    const selectedDevice = event.target.value;
-    let body = {
-      origin: searchQuery,
-      formFactor: selectedDevice,
-    };
-    if (selectedDevice === "ALL") {
-      body = {
-        origin: searchQuery,
-      };
-    }
-    fetchData(body);
-    setSelectedDevice(selectedDevice);
-  };
-  console.log({ searchQuery, searchData, selectedDevice });
-
-  const deviceOptions = [
-    { id: "all", name: "All", value: "ALL" },
-    { id: "phone", name: "Phone", value: "PHONE" },
-    { id: "tablet", name: "Tablet", value: "TABLET" },
-    { id: "desktop", name: "Desktop", value: "DESKTOP" },
-  ];
+  if (!searchQuery) return <>Add a URL and search to see data</>;
 
   return (
     <Stack spacing={2}>
@@ -84,26 +44,19 @@ export default function WebVitalsTable({ searchQuery }) {
           </Select>
         </FormControl>
       </Stack>
-      <Box sx={{ height: "100vh" }}>
-        <Box sx={{ height: 400, width: "100%" }}>
-          {/* <DataGrid
-            disableColumnFilter
-            rows={fractionsRows}
-            columns={fractionsCols}
-            initialState={{
-              pagination: {
-                paginationModel: {
-                  pageSize: 5,
-                },
-              },
-            }}
-            pageSizeOptions={[5]}
-            checkboxSelection
-            disableRowSelectionOnClick
-            disableColumnMenu
-          /> */}
+      {!searchData ? (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          No data for this option
         </Box>
-      </Box>
+      ) : (
+        <VitalBox searchData={searchData} />
+      )}
     </Stack>
   );
 }

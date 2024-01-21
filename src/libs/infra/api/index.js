@@ -9,25 +9,11 @@ const API_KEY = process.env.REACT_APP_CRUX_APP_API_KEY;
 
 class CrUX {
   read() {
-    return axiosInstance
-      .get(`${RESOURCE}?key=${API_KEY}`)
-      .then((data) => {
-        return data;
-      })
-      .catch((err) => {
-        alert(err.message);
-      });
+    return axiosInstance.get(`${RESOURCE}?key=${API_KEY}`);
   }
 
   create(body) {
-    return axiosInstance
-      .post(`${RESOURCE}?key=${API_KEY}`, body)
-      .then((data) => {
-        return data;
-      })
-      .catch((err) => {
-        alert(err.message);
-      });
+    return axiosInstance.post(`${RESOURCE}?key=${API_KEY}`, body);
   }
 }
 

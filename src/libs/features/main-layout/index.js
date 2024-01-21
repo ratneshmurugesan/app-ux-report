@@ -34,14 +34,14 @@ export default function MainLayout({ searchData, searchQuery }) {
           aria-label="basic tabs example"
         >
           {tabOptions.map((tabOption) => {
-            return <Tab label={tabOption.name} />;
+            return <Tab key={tabOption.id} label={tabOption.name} />;
           })}
         </Tabs>
       </Box>
       {tabOptions.map((tabOption, index) => {
         const Comp = tabPageMap[tabOption.id];
         return (
-          <CustomTabPanel value={selectedTab} index={index}>
+          <CustomTabPanel key={tabOption.id} value={selectedTab} index={index}>
             <Comp {...tableProps} />
           </CustomTabPanel>
         );
