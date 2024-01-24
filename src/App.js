@@ -9,30 +9,32 @@ import {
   InputAdornment,
   Button,
   FormControl,
+  IconButton,
+  Box,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import Container from "@mui/material/Container";
 import MainLayout from "./libs/features/main-layout";
-import { VALID_URL_PATTERN } from "./libs/constants";
 import { useSnackBarDispatch } from "./libs/contexts/snack-bar-context";
 import SnackBar from "./libs/components/snack-bar";
 import { LOAD_SNACK_BAR } from "./libs/contexts/snack-bar-context/action-types";
 
-// const tabOptions = [
-//   { id: "single_link", name: "Single Link" },
-//   { id: "multiple_links", name: "Multiple Links" },
-// ];
-
-// const tabPageMap = {
-//   web_vitals: WebVitalsTable,
-//   fractions_by_devices: DeviceTable,
-// };
-
 function App() {
   const inputRef = useRef(null);
-  const searchQueryRef = useRef("");
+
   const [searchData, setSearchData] = useState(null);
   const dispatch = useSnackBarDispatch();
+
+  const [fields, setFields] = useState([""]);
+
+  const handleAddField = () => {
+    setFields([...fields, ""]);
+  };
+
+  const handleRemoveField = (index) => {
+    const filteredFields = fields.filter((_, i) => i !== index);
+    setFields(filteredFields);
+  };
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -44,12 +46,7 @@ function App() {
   }, []);
 
   const handleSearchClick = () => {
-    const body = {
-      origin: searchQueryRef.current,
-      // metrics: ["largest_contentful_paint", "experimental_time_to_first_byte"],
-      // effectiveConnectionType: ["offline", "slow-2G", "2G", "3G", "4G"],
-    };
-    fetchData(body);
+    fetchData();
   };
 
   // const [count, setCount] = useState(1);
@@ -58,55 +55,95 @@ function App() {
   //   setCount(count + 1);
   // };
 
-  const fetchData = async (body) => {
+  const fetchData = async () => {
+    const multipleBodies = fields.map((url) => {
+      return {
+        origin: url,
+        // ...(selectedDevice === "ALL" ? {} : { formFactor: selectedDevice }),
+      };
+    });
     try {
-      const data = await cruxAPI.create(body);
-      setSearchData(data.data.record);
+      const data = await cruxAPI.bulkCreate(multipleBodies);
+      const formatted = data.map((obj) => ({
+        record: obj.value.data.record,
+      }));
+      setSearchData(formatted);
       dispatch({ type: LOAD_SNACK_BAR, open: true, content: "Data loaded" });
     } catch (err) {
       dispatch({ type: LOAD_SNACK_BAR, open: true, content: err.message });
     }
   };
 
-  const mainLayoutProps = { searchData, searchQuery: searchQueryRef.current };
+  const mainLayoutProps = { searchData };
+
   return (
     <>
       <Container sx={{ padding: "10px" }}>
         <Stack spacing={2}>
-          <Stack direction="row" spacing={2}>
-            <FormControl sx={{ width: "100%" }} variant="outlined">
-              <OutlinedInput
-                inputRef={inputRef}
-                onChange={(e) => {
-                  const enteredText = e.target.value;
-                  const isUrlValid = VALID_URL_PATTERN.test(enteredText);
-                  if (isUrlValid) {
-                    searchQueryRef.current = enteredText;
-                  }
+          <Stack
+            direction="row"
+            spacing={2}
+            sx={{
+              display: "flex",
+              alignItems: "stretch",
+              justifyContent: "center",
+            }}
+          >
+            <Container maxWidth="md" sx={{ mt: 8 }}>
+              {fields.map((field, index) => (
+                <FormControl
+                  key={index}
+                  variant="outlined"
+                  sx={{ display: "flex", gap: 5 }}
+                >
+                  <OutlinedInput
+                    value={field}
+                    onChange={(e) => {
+                      const updatedFields = [...fields];
+                      updatedFields[index] = e.target.value.trim();
+                      setFields(updatedFields);
+                    }}
+                    type="url"
+                    startAdornment={
+                      <InputAdornment position="start">
+                        <SearchIcon sx={{ color: "#000" }} />
+                      </InputAdornment>
+                    }
+                    endAdornment={
+                      <IconButton onClick={() => handleRemoveField(index)}>
+                        x
+                      </IconButton>
+                    }
+                    placeholder="https://example.com"
+                    sx={{ flex: 1 }}
+                  />
+                </FormControl>
+              ))}
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "baseline",
+                  justifyContent: "space-between",
+                  gap: 5,
+                  py: 2,
                 }}
-                type="url"
-                startAdornment={
-                  <InputAdornment position="start">
-                    <SearchIcon sx={{ color: "#000" }} />
-                  </InputAdornment>
-                }
-                placeholder="https://example.com"
-              />
-            </FormControl>
-            {/* <Button
-              variant="contained"
-              size="small"
-              // onClick={handleSearchClick}
-            >
-              + Add more
-            </Button> */}
-            <Button
-              variant="contained"
-              size="small"
-              onClick={handleSearchClick}
-            >
-              Search
-            </Button>
+              >
+                <Button
+                  variant="contained"
+                  size="large"
+                  onClick={handleAddField}
+                >
+                  + Add input
+                </Button>
+                <Button
+                  variant="contained"
+                  size="large"
+                  onClick={handleSearchClick}
+                >
+                  Search
+                </Button>
+              </Box>
+            </Container>
           </Stack>
           <MainLayout {...mainLayoutProps} />
         </Stack>
