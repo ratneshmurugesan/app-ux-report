@@ -51,17 +51,10 @@ function App() {
     fetchData();
   };
 
-  // const [count, setCount] = useState(1);
-
-  // const handleAddMoreClick = () => {
-  //   setCount(count + 1);
-  // };
-
   const fetchData = async () => {
     const multipleBodies = fields.map((url) => {
       return {
         origin: url,
-        // ...(selectedDevice === "ALL" ? {} : { formFactor: selectedDevice }),
       };
     });
     try {

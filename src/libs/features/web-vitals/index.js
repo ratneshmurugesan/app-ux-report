@@ -3,7 +3,6 @@ import React from "react";
 import { Typography } from "@mui/material";
 import Box from "@mui/material/Box";
 import { useWebVitalsTable } from "./use-web-vitals-table";
-// import VitalBox from "../vital-box";
 import MultipleSelectCheckmarks from "../../components/select";
 import { DataGrid } from "@mui/x-data-grid";
 import SingleSelectCheckmarks from "../../components/single-select";
@@ -85,8 +84,6 @@ export default function WebVitalsTable({ searchData }) {
     handleChange: handleThresholdFilterChange,
   };
 
-  console.log([tableObj, tableSumObj]);
-
   const isDataAvailable = !!searchData && searchData.length;
   if (searchData && !searchData.length)
     return (
@@ -128,7 +125,6 @@ export default function WebVitalsTable({ searchData }) {
         const avgOfNeedImprovement = Math.floor(sumOfNeedImprovement / 6);
         const avgOfPoor = Math.floor(sumOfPoor / 6);
 
-        // console.log({ sumOfGood, sumOfNeedImprovement, sumOfPoor });
         const isFractionsDataAvailable =
           !!searchData?.[index]?.record?.metrics?.form_factors?.fractions;
 

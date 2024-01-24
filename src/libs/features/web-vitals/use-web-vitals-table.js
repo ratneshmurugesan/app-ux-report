@@ -155,8 +155,6 @@ export const useWebVitalsTable = ({ searchData }) => {
     });
   }
 
-  console.log({ searchData, tableObj, tableSumObj });
-
   return {
     searchData,
     tableObj,
