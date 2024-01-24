@@ -35,7 +35,8 @@ function App() {
   const handleRemoveField = (index) => {
     const filteredFields = fields.filter((_, i) => i !== index);
     setFields(filteredFields);
-    setSearchData(searchData.filter((_, ind) => ind !== index));
+    if (searchData && searchData.length)
+      setSearchData(searchData.filter((_, ind) => ind !== index));
   };
 
   useEffect(() => {
@@ -79,6 +80,16 @@ function App() {
     <>
       <Container sx={{ padding: "10px" }}>
         <Stack spacing={2}>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "stretch",
+              justifyContent: "center",
+              fontWeight: "bold",
+            }}
+          >
+            App UX Report
+          </Box>
           <Stack
             direction="row"
             spacing={2}
@@ -113,7 +124,7 @@ function App() {
                         <CloseOutlined />
                       </IconButton>
                     }
-                    placeholder="https://example.com"
+                    placeholder="Please enter a URL like https://example.com"
                     sx={{ flex: 1 }}
                   />
                 </FormControl>
