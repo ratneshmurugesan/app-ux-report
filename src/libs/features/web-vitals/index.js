@@ -152,22 +152,25 @@ export default function WebVitalsTable({ searchData }) {
                 ? selectedThreshold < obj["page loads"]
                 : true;
             });
-          fractionsCols = Object.keys(fractionsRows[0])
-            .filter((key) => key !== "id")
-            .map((key) => {
-              if (key === "page loads") {
-                return {
-                  field: key,
-                  headerName: `${key.toLocaleUpperCase()} %`,
-                  width: "150",
-                };
-              }
-              return {
-                field: key,
-                headerName: key.toLocaleUpperCase(),
-                width: "150",
-              };
-            });
+          fractionsCols =
+            fractionsRows && fractionsRows.length && fractionsRows?.[0]
+              ? Object.keys(fractionsRows[0])
+                  .filter((key) => key !== "id")
+                  .map((key) => {
+                    if (key === "page loads") {
+                      return {
+                        field: key,
+                        headerName: `${key.toLocaleUpperCase()} %`,
+                        width: "150",
+                      };
+                    }
+                    return {
+                      field: key,
+                      headerName: key.toLocaleUpperCase(),
+                      width: "150",
+                    };
+                  })
+              : [];
         }
 
         return (
