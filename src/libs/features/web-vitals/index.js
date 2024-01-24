@@ -86,6 +86,8 @@ export default function WebVitalsTable({ searchData }) {
   };
 
   console.log([tableObj, tableSumObj]);
+
+  const isDataAvailable = !!searchData && searchData.length;
   if (searchData && !searchData.length)
     return (
       <Box
@@ -102,11 +104,12 @@ export default function WebVitalsTable({ searchData }) {
 
   return (
     <>
-      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-        <MultipleSelectCheckmarks {...metricFilterProps} />
-        <SingleSelectCheckmarks {...thresholdFilterProps} />
-      </Box>
-
+      {isDataAvailable ? (
+        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+          <MultipleSelectCheckmarks {...metricFilterProps} />
+          <SingleSelectCheckmarks {...thresholdFilterProps} />
+        </Box>
+      ) : null}
       <></>
       {Object.keys(tableObj).map((key, index) => {
         const sumOfGood = tableSumObj[key].reduce(
