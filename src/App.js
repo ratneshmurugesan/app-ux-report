@@ -18,6 +18,7 @@ import MainLayout from "./libs/features/main-layout";
 import { useSnackBarDispatch } from "./libs/contexts/snack-bar-context";
 import SnackBar from "./libs/components/snack-bar";
 import { LOAD_SNACK_BAR } from "./libs/contexts/snack-bar-context/action-types";
+import { CloseOutlined } from "@mui/icons-material";
 
 function App() {
   const inputRef = useRef(null);
@@ -34,6 +35,7 @@ function App() {
   const handleRemoveField = (index) => {
     const filteredFields = fields.filter((_, i) => i !== index);
     setFields(filteredFields);
+    setSearchData(searchData.filter((_, ind) => ind !== index));
   };
 
   useEffect(() => {
@@ -70,7 +72,11 @@ function App() {
       setSearchData(formatted);
       dispatch({ type: LOAD_SNACK_BAR, open: true, content: "Data loaded" });
     } catch (err) {
-      dispatch({ type: LOAD_SNACK_BAR, open: true, content: err.message });
+      dispatch({
+        type: LOAD_SNACK_BAR,
+        open: true,
+        content: "Please check the URL",
+      });
     }
   };
 
@@ -111,7 +117,7 @@ function App() {
                     }
                     endAdornment={
                       <IconButton onClick={() => handleRemoveField(index)}>
-                        x
+                        <CloseOutlined />
                       </IconButton>
                     }
                     placeholder="https://example.com"

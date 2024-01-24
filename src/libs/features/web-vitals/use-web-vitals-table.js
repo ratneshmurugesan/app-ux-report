@@ -28,49 +28,6 @@ export const useWebVitalsTable = ({ searchData }) => {
     firstinput_delay: "First Input Delay",
   };
 
-  const cols = [
-    {
-      field: "metric",
-      headerName: "Metrics",
-      width: "250",
-    },
-    {
-      field: "percentile",
-      headerName: "75th Percentile",
-      width: "150",
-    },
-    {
-      field: "goodDensity",
-      headerName: "Good Density (%)",
-      width: "150",
-    },
-    {
-      field: "goodDensityStartEnd",
-      headerName: "",
-      width: "100",
-    },
-    {
-      field: "needsImprovementDensity",
-      headerName: "Need Improvement Density (%)",
-      width: "250",
-    },
-    {
-      field: "needsImprovementDensityStartEnd",
-      headerName: "",
-      width: "150",
-    },
-    {
-      field: "poorDensity",
-      headerName: "Poor Density (%)",
-      width: "150",
-    },
-    {
-      field: "poorDensityStartEnd",
-      headerName: "",
-      width: "100",
-    },
-  ];
-
   let tableObj = {};
   let tableSumObj = {};
 
@@ -192,7 +149,7 @@ export const useWebVitalsTable = ({ searchData }) => {
         [record.key.origin]: tableRow,
       };
       tableSumObj = {
-        ...tableObj,
+        ...tableSumObj,
         [record.key.origin]: tableSumRow,
       };
     });
@@ -202,7 +159,6 @@ export const useWebVitalsTable = ({ searchData }) => {
 
   return {
     searchData,
-    cols,
     tableObj,
     tableSumObj,
     selectedThreshold,
